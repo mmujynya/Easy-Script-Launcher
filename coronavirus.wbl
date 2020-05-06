@@ -1,0 +1,47 @@
+ScriptName=C:\dev\ESL\twitter_stream_public.py
+*Successors=1
+*NickName=Twitter Live Stream
+keywords_list=[coronavirus,covid19,covid-19,pandemic]
+language_list=[en]
+size=200
+min_followers=10
+exclude_retweets=False
+destination=coronavirus_tweets.txt
+access_token=
+access_token_secret=
+consumer_key=
+consumer_secret=
+###########################################
+ScriptName=C:\dev\ESL\tweets_to_pandas.py
+*Successors=2
+*Predecessor=0
+*NickName=Formatting
+input_file=coronavirus_tweets.txt
+output_file=formatted_coronavirus_tweets.txt
+###########################################
+ScriptName=C:\dev\ESL\pub_worldcloud.py
+*Successors=3
+*Predecessor=1
+*NickName=Word Cloud
+max_font_size=80
+max_words=150
+background_color=RGBA(0,0,0,0)
+mode=RGB
+source_file=formatted_coronavirus_tweets.txt
+dest_file=coronavirus_word_cloud.png
+language=en
+filter=[coronavirus,covid,covid-19,covid19,pandemic,get,also,find,say,will,u2022,https,co,amp,people,u201d,re,don,gt,can]
+###########################################
+ScriptName=C:\dev\ESL\emails.py
+*Predecessor=2
+*NickName=Send Email
+mail_server=smtp.gmail.com
+port=465
+username=
+password=
+sender=Max Automation WordCloud
+recipient=
+subject=Task Notification: Coronavirus Word Cloud based on 200 tweets
+body=Program done with wordcloud (see attached)
+attachment_path=coronavirus_word_cloud.png
+###########################################
