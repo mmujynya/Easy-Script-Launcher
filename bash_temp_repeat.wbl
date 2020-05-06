@@ -1,0 +1,7 @@
+ScriptName=/mnt/c/dev/ESL/Farenheit_input.sh
+*Successors=0
+*Predecessor=0
+*Executable=bash
+*TimeThreshold=20
+*NickName=F to C (Keyboard)
+###########################################
