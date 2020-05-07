@@ -462,7 +462,7 @@ object FMain: TFMain
     EdgeInner = esNone
     EdgeOuter = esNone
     Font.CharSet = ANSI_CHARSET
-    Font.Color = clBlack
+    Font.Color = clScrollBar
     Font.Height = -17
     Font.Name = 'Segoe UI'
     Font.Pitch = fpVariable
