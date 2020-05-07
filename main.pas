@@ -10,8 +10,9 @@ uses
 const
   BUF_SIZE = 1024; // Buffer size for reading the output in chunks
 var
-   WorkingDir,DefaultExecutable,Separator,bash_mount,CurrentFileName:String;
-   DefaultTimeThreshold:integer;
+   WorkingDir,DefaultExecutable,Separator,bash_mount,CurrentFileName,LastWorkbook:String;
+   DefaultTimeThreshold,FormWidth,FormHeight,FormTop,FormLeft,OutputHeight:integer;
+   LoadLastWorkbook,DefaultOpening:boolean;
 
 type
 
@@ -20,7 +21,6 @@ type
 
   TFMain = class(TForm)
     AsyncProcess1: TAsyncProcess;
-    Bevel1: TBevel;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     GroupBoxOutputs: TGroupBox;
@@ -70,6 +70,7 @@ type
     SaveDialog1: TSaveDialog;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
+    Splitter3: TSplitter;
     StatusBar1: TStatusBar;
     TabSheetArguments: TTabSheet;
     TabSheetEditArguments: TTabSheet;
@@ -79,6 +80,8 @@ type
     ToolBar1: TToolBar;
     ToolButton1: TToolButton;
     ToolButton3: TToolButton;
+    ToolButton4: TToolButton;
+    ToolButtonRemove: TToolButton;
     ToolButtonSaveAs: TToolButton;
     ToolButtonSave: TToolButton;
     ToolButton2: TToolButton;
@@ -140,6 +143,7 @@ type
     procedure TimerStatusTimer(Sender: TObject);
 
     procedure ToolButton2Click(Sender: TObject);
+    procedure ToolButtonRemoveClick(Sender: TObject);
     procedure ToolButtonSaveAsClick(Sender: TObject);
     procedure ToolButtonAboutClick(Sender: TObject);
     procedure ToolButtonExitClick(Sender: TObject);
@@ -245,7 +249,7 @@ begin
 
                   if  WBLinesNb>0 then // If the workbook isn't empty
                      begin
-                          //GroupBoxOutputs.visible:=true; // Show the StdOutput panel
+                          GroupBoxOutputs.visible:=true; // Show the StdOutput panel
                           i:=0;
 
                           while i<= (WBLinesNb-1) do
@@ -438,7 +442,7 @@ begin
                                                      top:=20;
                                                      ResizeAnchor := akBottom;
                                                      Left := 0;
-                                                     Height := 4;
+                                                     Height := 2;
                                                      ParentColor:=False;
                                                      Color:=clDefault;
                                                      Align:= alTop;
@@ -490,7 +494,7 @@ begin
                                                    Parent:=APanelInput;
                                                     Left := 1 ;
                                                     Height := 25 ;
-                                                    Top := 1;
+                                                    Top := 0;
                                                     Width := 20;
                                                     Alignment := taLeftJustify;
                                                     AutoSize := True ;
@@ -675,6 +679,23 @@ begin
      application.ProcessMessages;
 end;
 
+procedure TFMain.ToolButtonRemoveClick(Sender: TObject);
+var i:integer;
+begin
+  ListBoxScripts.Clear;
+  for i:=0 to PageControlOutput.PageCount-1 do
+      begin
+           PageControlOutput.Pages[0].Destroy;
+      end;
+  MemoDocStrings.Clear;
+  MemoParams.clear ;
+  MemoArgs.clear;
+  Statusbar1.Panels[1].Text:='';
+  GroupBoxOutputs.Visible:=False;
+
+
+end;
+
 procedure TFMain.ToolButtonSaveAsClick(Sender: TObject);
 begin
   with SaveDialog1 do
@@ -772,7 +793,7 @@ procedure TFMain.AsyncProcess1Terminate(Sender: TObject);
              adest:= Parameters.Values['destination'];
              runNb:=RunNb+1;
 
-             if Successors<>'' then
+             if (Successors<>'') and (ErrorCode<>1) then
                 Try
                     ListOfSuccessors:=TStringList.create;
                     ListOfSuccessors.Delimiter:=';';
@@ -851,13 +872,29 @@ procedure TFMain.FormShow(Sender: TObject);
 var AStringList:TStringList;
 begin
   try
+    {Loads and reads program initialization file}
     AStringList:=TStringList.Create;
     AStringList.LoadFromFile('easyscriptlauncher.ini');
-    WorkingDir:= Trim(AStringList.Values['Directory']);
-    DefaultExecutable:= Trim(AStringList.Values['Executable']);
-    Separator:=Trim(AStringList.Values['Separator']);
-    DefaultTimeThreshold:=StrToInt(Trim(AStringList.Values['TimeThreshold']));
-    bash_mount:=Trim(AStringList.Values['bash_mount']);
+    WorkingDir:= Trim(AStringList.Values['DIRECTORY']);
+    DefaultExecutable:= Trim(AStringList.Values['EXECUTABLE']);
+    Separator:=Trim(AStringList.Values['SEPARATOR']);
+    DefaultTimeThreshold:=StrToInt(Trim(AStringList.Values['TIME THRESHOLD']));
+    bash_mount:=Trim(AStringList.Values['BASH MOUNT']);
+    FormWidth :=StrToInt(Trim(AStringList.Values['FORM WIDTH']));
+    FormHeight :=StrToInt(Trim(AStringList.Values['FORM HEIGHT']));
+    FormTop :=StrToInt(Trim(AStringList.Values['FORM TOP']));
+    FormLeft :=StrToInt(Trim(AStringList.Values['FORM LEFT']));
+    LastWorkbook :=Trim(AStringList.Values['LAST WORKBOOK']);
+    LoadLastWorkbook :=StrToBool(Trim(AStringList.Values['LOAD LAST WORKBOOK']));
+    DefaultOpening :=StrToBool(Trim(AStringList.Values['DEFAULT OPENING']));
+    OutputHeight := StrToInt(Trim(AStringList.Values['OUTPUT HEIGHT']));
+
+
+    FMain.Width:=FormWidth;
+    FMain.Height:=FormHeight;
+    FMain.Top:=FormTop;
+    FMain.Left:=FormLeft;
+    GroupBoxOutputs.Height:=OutputHeight;
 
     OpenDialogScript.InitialDir:= WorkingDir;
     OpenDialog2.InitialDir:= WorkingDir;

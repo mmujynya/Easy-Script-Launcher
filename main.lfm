@@ -1,11 +1,11 @@
 object FMain: TFMain
-  Left = 733
-  Height = 746
-  Top = 72
-  Width = 739
+  Left = 925
+  Height = 780
+  Top = 222
+  Width = 665
   Caption = 'Easy Script Launcher'
-  ClientHeight = 746
-  ClientWidth = 739
+  ClientHeight = 780
+  ClientWidth = 665
   DesignTimePPI = 120
   Font.CharSet = ANSI_CHARSET
   Font.Color = clBlack
@@ -152,13 +152,13 @@ object FMain: TFMain
   }
   Menu = MainMenu1
   OnShow = FormShow
-  Position = poDesktopCenter
+  Position = poScreenCenter
   LCLVersion = '2.0.8.0'
   object StatusBar1: TStatusBar
     Left = 0
     Height = 29
-    Top = 717
-    Width = 739
+    Top = 751
+    Width = 665
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -17
@@ -179,11 +179,11 @@ object FMain: TFMain
   object GroupBoxOutputs: TGroupBox
     Left = 0
     Height = 250
-    Top = 467
-    Width = 739
+    Top = 501
+    Width = 665
     Align = alBottom
     ClientHeight = 222
-    ClientWidth = 735
+    ClientWidth = 661
     ParentColor = False
     TabOrder = 1
     Visible = False
@@ -191,7 +191,7 @@ object FMain: TFMain
       Left = 0
       Height = 222
       Top = 0
-      Width = 735
+      Width = 661
       Align = alClient
       TabOrder = 0
       TabPosition = tpBottom
@@ -202,49 +202,42 @@ object FMain: TFMain
     Cursor = crVSplit
     Left = 0
     Height = 4
-    Top = 463
-    Width = 739
+    Top = 497
+    Width = 665
     Align = alBottom
     ResizeAnchor = akBottom
   end
   object PanelScripts: TPanel
     Left = 0
-    Height = 411
+    Height = 445
     Top = 52
-    Width = 739
+    Width = 665
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 411
-    ClientWidth = 739
+    ClientHeight = 445
+    ClientWidth = 665
     TabOrder = 3
     object GroupBox1: TGroupBox
       Left = 262
-      Height = 411
+      Height = 445
       Top = 0
-      Width = 477
+      Width = 403
       Align = alClient
-      ClientHeight = 386
-      ClientWidth = 473
+      ClientHeight = 420
+      ClientWidth = 399
       ParentFont = False
       TabOrder = 0
-      object Bevel1: TBevel
-        Left = 8
-        Height = 143
-        Top = -1
-        Width = 454
-        Anchors = [akTop, akLeft, akRight]
-      end
       object PageControl1: TPageControl
         Left = 0
-        Height = 239
+        Height = 273
         Top = 147
-        Width = 473
+        Width = 399
         ActivePage = TabSheetArguments
         Align = alBottom
         Anchors = [akTop, akLeft, akRight, akBottom]
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
-        Font.Height = -18
+        Font.Height = -17
         Font.Name = 'Segoe UI'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
@@ -255,21 +248,21 @@ object FMain: TFMain
         OnChange = PageControl1Change
         object TabSheetArguments: TTabSheet
           Caption = 'Arguments'
-          ClientHeight = 201
-          ClientWidth = 465
+          ClientHeight = 237
+          ClientWidth = 391
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
-          Font.Height = -18
+          Font.Height = -17
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           ParentFont = False
           object MemoArgs: TMemo
             Left = 0
-            Height = 201
+            Height = 237
             Hint = 'Double-Click to Edit'
             Top = 0
-            Width = 465
+            Width = 391
             Align = alClient
             BorderStyle = bsNone
             Font.CharSet = ANSI_CHARSET
@@ -292,20 +285,20 @@ object FMain: TFMain
         end
         object TabSheetEditArguments: TTabSheet
           Caption = 'Edit Arguments'
-          ClientHeight = 338
-          ClientWidth = 502
+          ClientHeight = 201
+          ClientWidth = 465
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
-          Font.Height = -18
+          Font.Height = -17
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           ParentFont = False
           object MemoParams: TMemo
             Left = 0
-            Height = 338
+            Height = 201
             Top = 0
-            Width = 502
+            Width = 465
             Align = alClient
             BorderStyle = bsNone
             Font.CharSet = ANSI_CHARSET
@@ -323,10 +316,11 @@ object FMain: TFMain
         end
       end
       object MemoDocStrings: TMemo
-        Left = 13
-        Height = 134
-        Top = 4
-        Width = 443
+        Left = 0
+        Height = 141
+        Top = 0
+        Width = 399
+        Align = alClient
         Anchors = [akTop, akLeft, akRight]
         BorderStyle = bsNone
         Font.CharSet = ANSI_CHARSET
@@ -336,24 +330,34 @@ object FMain: TFMain
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
         ParentFont = False
+        ReadOnly = True
         ScrollBars = ssAutoBoth
         TabOrder = 1
+      end
+      object Splitter3: TSplitter
+        Cursor = crVSplit
+        Left = 0
+        Height = 6
+        Top = 141
+        Width = 399
+        Align = alBottom
+        ResizeAnchor = akBottom
       end
     end
     object GroupBox2: TGroupBox
       Left = 0
-      Height = 411
+      Height = 445
       Top = 0
       Width = 256
       Align = alLeft
-      ClientHeight = 386
+      ClientHeight = 420
       ClientWidth = 252
       ParentColor = False
       ParentFont = False
       TabOrder = 1
       object ListBoxScripts: TListBox
         Left = 0
-        Height = 315
+        Height = 349
         Top = 0
         Width = 252
         Align = alClient
@@ -379,9 +383,10 @@ object FMain: TFMain
       object PanelLegend: TPanel
         Left = 0
         Height = 71
-        Top = 315
+        Top = 349
         Width = 252
         Align = alBottom
+        BevelOuter = bvNone
         ClientHeight = 71
         ClientWidth = 252
         TabOrder = 1
@@ -390,6 +395,7 @@ object FMain: TFMain
           Height = 20
           Top = 13
           Width = 20
+          BevelOuter = bvNone
           Color = 8437759
           ParentColor = False
           TabOrder = 0
@@ -414,6 +420,7 @@ object FMain: TFMain
           Height = 20
           Top = 37
           Width = 20
+          BevelOuter = bvNone
           Color = 7864183
           ParentColor = False
           TabOrder = 1
@@ -437,7 +444,7 @@ object FMain: TFMain
     end
     object Splitter1: TSplitter
       Left = 256
-      Height = 411
+      Height = 445
       Top = 0
       Width = 6
     end
@@ -446,7 +453,7 @@ object FMain: TFMain
     Left = 0
     Height = 50
     Top = 2
-    Width = 739
+    Width = 665
     AutoSize = True
     BorderSpacing.Top = 2
     ButtonHeight = 50
@@ -466,7 +473,7 @@ object FMain: TFMain
     TabOrder = 4
     Transparent = True
     object ToolButtonSave: TToolButton
-      Left = 61
+      Left = 138
       Top = 0
       Caption = 'Save'
       Enabled = False
@@ -477,45 +484,59 @@ object FMain: TFMain
       Left = 1
       Top = 0
       AutoSize = True
-      Caption = 'Open'
-      ImageIndex = 7
+      Caption = 'Add'
+      ImageIndex = 19
       OnClick = ToolButton2Click
     end
     object ToolButtonAbout: TToolButton
-      Left = 263
+      Left = 340
       Top = 0
       Caption = 'About'
       ImageIndex = 11
       OnClick = ToolButtonAboutClick
     end
     object ToolButtonExit: TToolButton
-      Left = 195
+      Left = 272
       Top = 0
       Caption = 'Exit'
       ImageIndex = 10
       OnClick = ToolButtonExitClick
     end
     object ToolButton1: TToolButton
-      Left = 255
+      Left = 332
       Height = 50
       Top = 0
       Caption = 'ToolButton1'
       Style = tbsSeparator
     end
     object ToolButton3: TToolButton
-      Left = 187
+      Left = 264
       Height = 50
       Top = 0
       Caption = 'ToolButton3'
       Style = tbsSeparator
     end
     object ToolButtonSaveAs: TToolButton
-      Left = 121
+      Left = 198
       Top = 0
       Caption = 'Save As'
       Enabled = False
       ImageIndex = 8
       OnClick = ToolButtonSaveAsClick
+    end
+    object ToolButtonRemove: TToolButton
+      Left = 61
+      Top = 0
+      Caption = 'Remove'
+      ImageIndex = 117
+      OnClick = ToolButtonRemoveClick
+    end
+    object ToolButton4: TToolButton
+      Left = 130
+      Height = 50
+      Top = 0
+      Caption = 'ToolButton4'
+      Style = tbsSeparator
     end
   end
   object OpenDialogScript: TOpenDialog
