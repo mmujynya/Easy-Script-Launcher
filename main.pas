@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, process, Forms, Controls, Graphics, Dialogs, StdCtrls,DateUtils,
-  AsyncProcess, ExtCtrls, Menus, ComCtrls, ValEdit, Types,LCLType,umodasyncProcess,Math,uAbout {$IFDEF Windows},shellapi {$ENDIF};
+  AsyncProcess, ExtCtrls, Menus, ComCtrls, ValEdit, Types,LCLType,umodasyncProcess,Math,uAbout{$IFDEF Windows},shellapi {$ENDIF};
 const
   BUF_SIZE = 1024; // Buffer size for reading the output in chunks
 var
@@ -23,6 +23,7 @@ type
     AsyncProcess1: TAsyncProcess;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
+    GroupBoxParams: TGroupBox;
     GroupBoxOutputs: TGroupBox;
     ImageList1: TImageList;
     ImageList2: TImageList;
@@ -31,7 +32,6 @@ type
     ListBoxScripts: TListBox;
     MainMenu1: TMainMenu;
     MemoDocStrings: TMemo;
-    MemoArgs: TMemo;
     MemoParams: TMemo;
     MenuExit: TMenuItem;
     MenuAbout: TMenuItem;
@@ -58,7 +58,6 @@ type
     MenuItem9: TMenuItem;
     OpenDialogScript: TOpenDialog;
     OpenDialog2: TOpenDialog;
-    PageControl1: TPageControl;
     PageControlOutput: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
@@ -72,8 +71,6 @@ type
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     StatusBar1: TStatusBar;
-    TabSheetArguments: TTabSheet;
-    TabSheetEditArguments: TTabSheet;
     Timer1: TTimer;
     TimerStatus: TTimer;
     TimerScripts: TTimer;
@@ -96,6 +93,7 @@ type
     procedure EditInputDblClick(Sender: TObject);
 
     procedure EditInputKeyPress(Sender: TObject; var Key: char);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
 
 
 
@@ -111,6 +109,7 @@ type
 
     procedure MemoArgsDblClick(Sender: TObject);
     procedure MemoParamsChange(Sender: TObject);
+    procedure MemoParamsDblClick(Sender: TObject);
     procedure MenuAboutClick(Sender: TObject);
     procedure MenuExitClick(Sender: TObject);
     procedure MenuIOpenWorkbookClick(Sender: TObject);
@@ -131,7 +130,7 @@ type
     procedure MenuItemSaveWbClick(Sender: TObject);
     procedure MenuItemTimerThresholdClick(Sender: TObject);
 
-    procedure PageControl1Change(Sender: TObject);
+    procedure LoadParameters(AScriptID:integer);
     procedure PopupMenuScriptsPopup(Sender: TObject);
     function ExtractDocStrings(aFilename:string):string;
     procedure SaveWorkBook;
@@ -525,6 +524,7 @@ begin
                      begin
                           ListBoxScripts.ItemIndex:=0;
                           ListBoxScripts.Selected[0]:=true;
+                          ListBoxScriptsClick(nil)
                      end;
                   ListBoxScripts.Repaint;
                   Application.ProcessMessages;
@@ -689,7 +689,6 @@ begin
       end;
   MemoDocStrings.Clear;
   MemoParams.clear ;
-  MemoArgs.clear;
   Statusbar1.Panels[1].Text:='';
   GroupBoxOutputs.Visible:=False;
 
@@ -788,12 +787,12 @@ procedure TFMain.AsyncProcess1Terminate(Sender: TObject);
                        end;
 
                  end;
-
+                 if Errors<>'' then ErrorCode:=2;
 
              adest:= Parameters.Values['destination'];
              runNb:=RunNb+1;
 
-             if (Successors<>'') and (ErrorCode<>1) then
+             if (Successors<>'') and (ErrorCode=0) then
                 Try
                     ListOfSuccessors:=TStringList.create;
                     ListOfSuccessors.Delimiter:=';';
@@ -812,17 +811,21 @@ procedure TFMain.AsyncProcess1Terminate(Sender: TObject);
                                      Execute;
                                    end
                               end;
-                     end
+                     end;
+
+                    if adest<>'' then
+                     begin
+                           {$IFDEF Windows}
+                           ShellExecute(FMain.Handle, PChar ('open'), PChar (adest),PChar (''), PChar (''), 1);
+                           {$ENDIF}
+                     end;
+
+
                 finally
                        ListOfSuccessors.free
                 end;
          end;
-    if adest<>'' then
-       begin
-             {$IFDEF Windows}
-             ShellExecute(FMain.Handle, PChar ('open'), PChar (adest),PChar (''), PChar (''), 1);
-             {$ENDIF}
-       end;
+
    GroupBoxOutputs.visible:=(SomeOutput or SomeErrors or GroupBoxOutputs.visible);
     ListBoxScripts.Repaint;
     application.ProcessMessages;
@@ -866,6 +869,25 @@ begin
    end;
 end;
 
+procedure TFMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+var AStringList:TStringList;
+begin
+     try
+        AStringList:=TStringList.Create;
+        AStringList.LoadFromFile('easyscriptlauncher.ini');
+        AStringList.Values['FORM WIDTH']:=IntToStr(FMain.Width);
+        AStringList.Values['FORM HEIGHT']:=IntToStr(FMain.Height);
+        AStringList.Values['FORM TOP']:=IntToStr(FMain.Top);
+        AStringList.Values['FORM LEFT']:=IntToStr(FMain.Left);
+        if ListBoxScripts.Count >0 then AStringList.Values['LAST WORKBOOK']:= OpenDialogScript.FileName else
+        AStringList.Values['LAST WORKBOOK']:='' ;
+
+        AStringList.SaveToFile('easyscriptlauncher.ini');
+     finally
+            AStringList.Free
+     end;
+end;
+
 
 
 procedure TFMain.FormShow(Sender: TObject);
@@ -888,7 +910,7 @@ begin
     LoadLastWorkbook :=StrToBool(Trim(AStringList.Values['LOAD LAST WORKBOOK']));
     DefaultOpening :=StrToBool(Trim(AStringList.Values['DEFAULT OPENING']));
     OutputHeight := StrToInt(Trim(AStringList.Values['OUTPUT HEIGHT']));
-
+    OpenDialogScript.FileName:=LastWorkbook;
 
     FMain.Width:=FormWidth;
     FMain.Height:=FormHeight;
@@ -915,17 +937,14 @@ begin
      ListBoxScripts.Repaint;///
      if ScriptPosition <>-1 then
         begin
-             anAsyncProcess:= ListBoxScripts.Items.Objects[ScriptPosition] as TModAsyncProcess;
-             MemoArgs.lines.clear;
-             MemoArgs.lines.addstrings(anAsyncProcess.Parameters);
+          LoadParameters(ScriptPosition);
+          anAsyncProcess:= ListBoxScripts.Items.Objects[ScriptPosition] as TModAsyncProcess;
              ExecTimes:='';
              if anAsyncProcess.running then ExecTimes:='Started: '+FormatDateTime('hh:mm:ss',anAsyncProcess.startTime) else
              if (anAsyncProcess.RunNb>0) then ExecTimes  :='Started: '+FormatDateTime('hh:mm:ss',anAsyncProcess.startTime)+' - Finished: '+ FormatDateTime('hh:mm:ss',anAsyncProcess.FinishTime);
              MemoDocStrings.lines.clear;
              MemoDocStrings.lines.add(anAsyncProcess.Message+chr(13)+ExecTimes+chr(13)+anAsyncProcess.DocStrings);
-
-             TabSheetEditArguments.TabVisible:= not(anAsyncProcess.Running);
-             PageControl1.ActivePageIndex:=0;
+             MemoParams.Enabled:= not(anAsyncProcess.Running);
              PageControlOutput.ActivePageIndex:=ScriptPosition;
         end;
 end;
@@ -1023,8 +1042,7 @@ end;
 
 procedure TFMain.MemoArgsDblClick(Sender: TObject);
 begin
-  PageControl1.ActivePageIndex:=1;
-  PageControl1Change(Sender)
+
 end;
 
 
@@ -1032,7 +1050,6 @@ end;
 procedure TFMain.MemoParamsChange(Sender: TObject);
 var
    ScriptPosition:integer;
-   Filename:string;
 begin
      {Any change on MemoParams is immediately applied to the selected script,
       unless MemoParams Tag is set to a value different than zero}
@@ -1043,17 +1060,30 @@ begin
                 begin
                      with (ListBoxScripts.Items.Objects[ScriptPosition] as TModAsyncProcess) do
                         begin
-                             filename:=Parameters[0];
                              Parameters.clear;
-                             Parameters.addstrings(Filename);
                              Parameters.addstrings(MemoParams.lines);
-                             MemoArgs.lines.clear;
-                             MemoArgs.lines.addstrings( Parameters);
-
                         end;
                      ToolButtonSave.Enabled:=True;
                 end;
         end;
+end;
+
+procedure TFMain.MemoParamsDblClick(Sender: TObject);
+begin
+     with MemoParams do
+     if ReadOnly then
+        begin
+          ReadOnly:=False;
+          Hint:='Double-click to disable editing';
+          Color:=clDefault
+
+        end
+     else
+         begin
+              ReadOnly:=True;
+              Hint:='Double-click to edit';
+              Color:=clBtnFace
+         end;
 end;
 
 procedure TFMain.MenuAboutClick(Sender: TObject);
@@ -1068,11 +1098,12 @@ begin
            mrYes:
                 begin
                      SaveWorkBook;
-                     Application.Terminate
+                     FMain.Close;
+                     //Application.Terminate
                 end ;
-          mrNo: Application.Terminate
+          mrNo: FMain.Close; //Application.Terminate
        end
-    else Application.Terminate
+    else FMain.Close; //Application.Terminate
 end;
 
 procedure TFMain.MenuIOpenWorkbookClick(Sender: TObject);
@@ -1082,7 +1113,7 @@ end;
 
 procedure TFMain.MenuItemEditParamsClick(Sender: TObject);
 begin
-  PageControl1.ActivePageIndex:=1;
+
 end;
 
 procedure TFMain.MenuItemErrorsClick(Sender: TObject);
@@ -1402,28 +1433,22 @@ begin
         end;
 end;
 
-procedure TFMain.PageControl1Change(Sender: TObject);
+procedure TFMain.LoadParameters(AScriptID:integer);
+{ For a given AScriptID, loads the associated thread parameters into the MemoParams TMemo.
+  Since anychange to MemoParams also updates the currently selected thread, we set MemoParams tag to 1
+  during the loading to avoid a vicious circle.}
 var
-   ScriptPosition:integer;
    anAsyncProcess : TModAsyncProcess;
 begin
-  ScriptPosition:=ListBoxScripts.ItemIndex;
-  if PageControl1.ActivePageIndex=1 then
-     try
-       MemoParams.Tag:=1;//Disable immediate update of current script parameters
-       if ScriptPosition <>-1 then
-          begin
-               anAsyncProcess:= ListBoxScripts.Items.Objects[ScriptPosition] as TModAsyncProcess;
-               MemoParams.lines.clear;
-               MemoParams.lines.addstrings(anAsyncProcess.Parameters);
-               MemoParams.Lines.Delete(0);
-
-          end;
-
-     finally
-       MemoParams.Tag:=0;//Enable immediate update of current script parameters
-     end;
-end;
+        try
+           MemoParams.Tag:=1;//Disable immediate update of current script parameters
+           anAsyncProcess:= ListBoxScripts.Items.Objects[AScriptID] as TModAsyncProcess;
+           MemoParams.lines.clear;
+           MemoParams.lines.addstrings(anAsyncProcess.Parameters);
+        finally
+               MemoParams.Tag:=0;//Enable immediate update of current script parameters
+        end;
+  end;
 
 procedure TFMain.PopupMenuScriptsPopup(Sender: TObject);
 var ScriptPosition:integer;
