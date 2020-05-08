@@ -57,7 +57,7 @@ type
     MenuItem8: TMenuItem;
     MenuItem9: TMenuItem;
     OpenDialogScript: TOpenDialog;
-    OpenDialog2: TOpenDialog;
+    OpenDialogNew: TOpenDialog;
     PageControlOutput: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
@@ -78,6 +78,7 @@ type
     ToolButton1: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
+    ToolButtonNew: TToolButton;
     ToolButtonRemove: TToolButton;
     ToolButtonSaveAs: TToolButton;
     ToolButtonSave: TToolButton;
@@ -142,6 +143,7 @@ type
     procedure TimerStatusTimer(Sender: TObject);
 
     procedure ToolButton2Click(Sender: TObject);
+    procedure ToolButtonNewClick(Sender: TObject);
     procedure ToolButtonRemoveClick(Sender: TObject);
     procedure ToolButtonSaveAsClick(Sender: TObject);
     procedure ToolButtonAboutClick(Sender: TObject);
@@ -196,7 +198,8 @@ begin
                         end;
                  WBStringList.Add(Separator)
             end;
-          if WBStringList.Count>0 then WBStringList.SaveToFile(CurrentFileName)
+          if WBStringList.Count>0 then WBStringList.SaveToFile(CurrentFileName);
+          StatusBar1.Panels[1].Text:=CurrentFileName;
      finally
             WBStringList.Free
      end;
@@ -228,317 +231,309 @@ var
    aLabel:Tlabel;
    BeginBlock,EndBlock:boolean;
 begin
-  with OpenDialogScript do
-       begin
-            FilterIndex:=2;
-            if Execute then
-               try
+     try
 
-                 StatusBar1.Panels[1].Text:=Filename;
-                 WBStringList:=TStringList.Create;  // Stores the entire workbook
-                  ParamStringList:=TStringList.Create; // Stores the parameters of a thread
-                  ThreadStringList:=TStringList.Create; // Stores some other values of a thread. Convention: these start with "*"
-                  WBStringList.LoadFromFile(FileName);  //The workbook is loaded  in WBStringList, a TStringList instance
+       StatusBar1.Panels[1].Text:=CurrentFileName;
+       WBStringList:=TStringList.Create;  // Stores the entire workbook
+        ParamStringList:=TStringList.Create; // Stores the parameters of a thread
+        ThreadStringList:=TStringList.Create; // Stores some other values of a thread. Convention: these start with "*"
+        WBStringList.LoadFromFile(CurrentFileName);  //The workbook is loaded  in WBStringList, a TStringList instance
 
-                  WBLinesNb:=WBStringList.Count;
-                  Asuccessors:='';
-                  Counter:=0;
-                  BeginBlock:=False;
-                  EndBlock:=False;
+        WBLinesNb:=WBStringList.Count;
+        Asuccessors:='';
+        Counter:=0;
+        BeginBlock:=False;
+        EndBlock:=False;
 
-                  if  WBLinesNb>0 then // If the workbook isn't empty
-                     begin
-                          GroupBoxOutputs.visible:=true; // Show the StdOutput panel
-                          i:=0;
+        if  WBLinesNb>0 then // If the workbook isn't empty
+           begin
+                GroupBoxOutputs.visible:=true; // Show the StdOutput panel
+                i:=0;
 
-                          while i<= (WBLinesNb-1) do
-                                 begin
+                while i<= (WBLinesNb-1) do
+                       begin
 
-                                   ALine:= WBStringList[i]; // Reads a line
-                                   FileTag:=pos(KeyWordScript,ALine);  // Checks if the line is a script filename
+                         ALine:= WBStringList[i]; // Reads a line
+                         FileTag:=pos(KeyWordScript,ALine);  // Checks if the line is a script filename
 
-                                   if FileTag<>0 then // If the line is a script filename
-                                      begin
-                                           BeginBlock:=True;
-                                           Aline:=trim(RightStr(Aline,length(Aline)-length(KeyWordScript))); // Extracts the value of the filename
-                                      end;
+                         if FileTag<>0 then // If the line is a script filename
+                            begin
+                                 BeginBlock:=True;
+                                 Aline:=trim(RightStr(Aline,length(Aline)-length(KeyWordScript))); // Extracts the value of the filename
+                            end;
 
-                                   // if Aline is a thread value store it in the thread params list (not a parameter to be provided to the script )
-                                   if Aline[1]='*' then ThreadStringList.add(RightStr(Aline,length(Aline)-1))
-                                      else
-                                            if Aline<>Separator then ParamStringList.add(Aline); //Separators are ignored
+                         // if Aline is a thread value store it in the thread params list (not a parameter to be provided to the script )
+                         if Aline[1]='*' then ThreadStringList.add(RightStr(Aline,length(Aline)-1))
+                            else
+                                  if Aline<>Separator then ParamStringList.add(Aline); //Separators are ignored
 
-                                   if (i = WBLinesNb-1) then
-                                      EndBlock := True
-                                   else
-                                       EndBlock := pos(KeyWordScript, WBStringList[i+1])<>0;
+                         if (i = WBLinesNb-1) then
+                            EndBlock := True
+                         else
+                             EndBlock := pos(KeyWordScript, WBStringList[i+1])<>0;
 
-                                   {Parsing of a thread block in the workbook is done: create the thread and add a corresponding entry in the list of scripts}
-                                   if  (BeginBlock and EndBlock) and (ParamStringList.count>0) then
-                                      begin
+                         {Parsing of a thread block in the workbook is done: create the thread and add a corresponding entry in the list of scripts}
+                         if  (BeginBlock and EndBlock) and (ParamStringList.count>0) then
+                            begin
 
-                                           {Step1: check if the workbook has special settings for the thread that override default value}
-                                           anExecutable:=trim(ThreadStringList.Values['Executable']);
-                                           if anExecutable='' then anExecutable:= DefaultExecutable; //DefaultExecutable is set in the ini file
+                                 {Step1: check if the workbook has special settings for the thread that override default value}
+                                 anExecutable:=trim(ThreadStringList.Values['Executable']);
+                                 if anExecutable='' then anExecutable:= DefaultExecutable; //DefaultExecutable is set in the ini file
 
 
-                                           ATimeThreshold:=trim(ThreadStringList.Values['TimeThreshold']);
-                                           if ATimeThreshold='' then ATimeThreshold:= IntToStr(DefaultTimeThreshold);//DefaultTimeThreshold is the TimeThreshold set in the ini file
+                                 ATimeThreshold:=trim(ThreadStringList.Values['TimeThreshold']);
+                                 if ATimeThreshold='' then ATimeThreshold:= IntToStr(DefaultTimeThreshold);//DefaultTimeThreshold is the TimeThreshold set in the ini file
 
-                                           aThreadParam:=trim(ThreadStringList.Values['Priority']);
-                                           if aThreadParam='' then APriority:= ppNormal else
-                                           if aThreadParam='ppHigh' then APriority:= ppHigh else
-                                           if aThreadParam='ppIdle' then APriority:= ppIdle else
-                                           if aThreadParam='ppRealTime' then APriority:= ppRealTime;
+                                 aThreadParam:=trim(ThreadStringList.Values['Priority']);
+                                 if aThreadParam='' then APriority:= ppNormal else
+                                 if aThreadParam='ppHigh' then APriority:= ppHigh else
+                                 if aThreadParam='ppIdle' then APriority:= ppIdle else
+                                 if aThreadParam='ppRealTime' then APriority:= ppRealTime;
 
-                                           Asuccessors:=trim(ThreadStringList.Values['Successors']);
+                                 Asuccessors:=trim(ThreadStringList.Values['Successors']);
 
-                                           aThreadParam:=trim(ThreadStringList.Values['Predecessor']);
-                                           if aThreadParam='' then APredecessor:=-1 else APredecessor:=StrToInt(aThreadParam);
-
-
-                                           aNIckName:=trim(ThreadStringList.Values['NickName']);
-
-                                           {------ End of Step1}
+                                 aThreadParam:=trim(ThreadStringList.Values['Predecessor']);
+                                 if aThreadParam='' then APredecessor:=-1 else APredecessor:=StrToInt(aThreadParam);
 
 
-                                           {Step2: Create an instance of a TModAsyncProcess and set its values and the associated script parameters}
-                                           anAsyncProcess:=TModAsyncProcess.create(FMain);
-                                           with anAsyncProcess do
-                                               begin
-                                                    Active:=False;
+                                 aNIckName:=trim(ThreadStringList.Values['NickName']);
 
-                                                    {Assign values set at step 1 above}
-                                                    Executable:=anExecutable;
-                                                    Priority := APriority ;
-                                                    Successors:=Asuccessors;
-                                                    Predecessor:=APredecessor;
-                                                    NIckName:=aNIckName;
-                                                    TimeThreshold:=StrToInt(ATimeThreshold);
-                                                    {--}
+                                 {------ End of Step1}
 
 
-                                                    FillAttribute:=0;
-                                                    Options:=[poUsePipes];
-                                                    PipeBufferSize:=BUF_SIZE;
-                                                    CurrentDirectory:=WorkingDir;
-                                                    ErrorCode:=0;
+                                 {Step2: Create an instance of a TModAsyncProcess and set its values and the associated script parameters}
+                                 anAsyncProcess:=TModAsyncProcess.create(FMain);
+                                 with anAsyncProcess do
+                                     begin
+                                          Active:=False;
 
-                                                    {$IFDEF Windows}
-                                                    ShowWindow := swoHIDE;
-                                                    OnTerminate:=@AsyncProcess1Terminate;  // this works only on Windows, not on Linux Manjaro
-                                                    {$ENDIF}
-
-                                                    {Assign script parameters}
-                                                    Parameters.addstrings(ParamStringList);
-
-
-                                                    {   The Tag below is important for Linux because OnTerminate is not fired and
-                                                         a workaround fix is for a timer "TimerScripts" to execute running threads
-                                                         (those with a Tag=1) to the OnTerminate event handler}
-                                                    Tag:=0;
-
-                                                    aScriptFilename:= ParamStringList[0];
-                                                    { in my version of Windows 10, I installed bash through WSL. Bash uses the linux mount of the file.
-                                                    I have to take this into account}
-                                                    {$IFDEF Windows}
-                                                    if  Executable='bash' then
-                                                       begin
-                                                            aScriptFilename:=RightStr(aScriptFilename,length(aScriptFilename)-length(bash_mount));
-                                                            aScriptFilename:=StringReplace(aScriptFilename,'/','\',[rfReplaceAll]);
-                                                            Insert(':',aScriptFilename,2);
-                                                       end;
-                                                    {$ENDIF}
-                                                    {Exctracts the docstrings and the parameters list included in the docstrings.
-                                                    convention is to have "Parameters=" to start the list of parameters separated by "|"}
-                                                    if FileExists(aScriptFilename) then
-                                                       begin
-                                                             aRawDocStrings:=ExtractDocStrings(aScriptFilename);
-                                                             ParamDocStringPosition:=pos('Parameters=',aRawDocStrings);
-                                                             if  ParamDocStringPosition<>0 then
-                                                             try
-                                                                aDocStringsParams:=TStringList.create;
-                                                                aDocStringsParams.Delimiter:='|';
-                                                                if ParamDocStringPosition>1 then
-                                                                   begin
-                                                                     DocStrings:=Copy(aRawDocStrings,1,ParamDocStringPosition-1);
-
-                                                                   end;
-                                                                aRawDocStrings:=Copy(aRawDocStrings,ParamDocStringPosition+11, length(aRawDocStrings)-10-ParamDocStringPosition);
-                                                                aDocStringsParams.DelimitedText:=aRawDocStrings;
-                                                                DocStrings:=DocStrings+Chr(13)+'Parameters are such:'+chr(13)+chr(13)+aDocStringsParams.Text;
-
-                                                             finally
-                                                               aDocStringsParams.Free
-                                                             end;
-                                                       end
-                                                    else
-                                                        begin
-                                                              DocStrings:='';
-                                                              Message:='Error=Script not found: ' + aScriptFilename
-                                                        end;
-
-                                                    ScriptId:=Counter;
-                                                    Counter:=Counter+1;
-
-                                               end;
-
-                                           if aNickName='' then aNickName:=ExtractFileName(aScriptFilename);
-                                           ListBoxScripts.AddItem(aNickName,anAsyncProcess);//Add item on list of scripts
+                                          {Assign values set at step 1 above}
+                                          Executable:=anExecutable;
+                                          Priority := APriority ;
+                                          Successors:=Asuccessors;
+                                          Predecessor:=APredecessor;
+                                          NIckName:=aNIckName;
+                                          TimeThreshold:=StrToInt(ATimeThreshold);
+                                          {--}
 
 
+                                          FillAttribute:=0;
+                                          Options:=[poUsePipes];
+                                          PipeBufferSize:=BUF_SIZE;
+                                          CurrentDirectory:=WorkingDir;
+                                          ErrorCode:=0;
+
+                                          {$IFDEF Windows}
+                                          ShowWindow := swoHIDE;
+                                          OnTerminate:=@AsyncProcess1Terminate;  // this works only on Windows, not on Linux Manjaro
+                                          {$ENDIF}
+
+                                          {Assign script parameters}
+                                          Parameters.addstrings(ParamStringList);
 
 
-                                           {------ End of Step2}
+                                          {   The Tag below is important for Linux because OnTerminate is not fired and
+                                               a workaround fix is for a timer "TimerScripts" to execute running threads
+                                               (those with a Tag=1) to the OnTerminate event handler}
+                                          Tag:=0;
 
+                                          aScriptFilename:= ParamStringList[0];
+                                          { in my version of Windows 10, I installed bash through WSL. Bash uses the linux mount of the file.
+                                          I have to take this into account}
+                                          {$IFDEF Windows}
+                                          if  Executable='bash' then
+                                             begin
+                                                  aScriptFilename:=RightStr(aScriptFilename,length(aScriptFilename)-length(bash_mount));
+                                                  aScriptFilename:=StringReplace(aScriptFilename,'/','\',[rfReplaceAll]);
+                                                  Insert(':',aScriptFilename,2);
+                                             end;
+                                          {$ENDIF}
+                                          {Exctracts the docstrings and the parameters list included in the docstrings.
+                                          convention is to have "Parameters=" to start the list of parameters separated by "|"}
+                                          if FileExists(aScriptFilename) then
+                                             begin
+                                                   aRawDocStrings:=ExtractDocStrings(aScriptFilename);
+                                                   ParamDocStringPosition:=pos('Parameters=',aRawDocStrings);
+                                                   if  ParamDocStringPosition<>0 then
+                                                   try
+                                                      aDocStringsParams:=TStringList.create;
+                                                      aDocStringsParams.Delimiter:='|';
+                                                      if ParamDocStringPosition>1 then
+                                                         begin
+                                                           DocStrings:=Copy(aRawDocStrings,1,ParamDocStringPosition-1);
 
-                                           {Step3: Add a tabsheet for this thread's StdOutput}
-                                           ATabSheet:= PageControlOutput.AddTabSheet;
-                                           with ATabSheet do
-                                               begin
-                                                 Caption:= aNickName;
-                                                 TabVisible:=False;
-                                                 ATabSheet.Color:=clblack;
-                                               end;
+                                                         end;
+                                                      aRawDocStrings:=Copy(aRawDocStrings,ParamDocStringPosition+11, length(aRawDocStrings)-10-ParamDocStringPosition);
+                                                      aDocStringsParams.DelimitedText:=aRawDocStrings;
+                                                      DocStrings:=DocStrings+Chr(13)+'Parameters are such:'+chr(13)+chr(13)+aDocStringsParams.Text;
 
-
-                                           {Displays StdOutput }
-                                           AListBox:=TListBox.Create(ATabSheet);
-                                           with AListBox do
-                                               begin
-                                                 Parent:=ATabSheet;
-                                                 BorderStyle :=bsNone;
-                                                 Align:=alBottom;
-                                                 Color:=clBlack;
-                                                 Font.Color:=clwhite;
-                                                 visible:=true;
-                                                 Height:=20;
-                                               end;
-
-
-
-                                           {Displays StdError}
-                                           AnErrorListBox:=TListBox.Create(ATabSheet);
-                                           with AnErrorListBox do
-                                               begin
-                                                   Parent:=ATabSheet;
-                                                   BorderStyle :=bsNone;
-                                                   Align:=alTop;
-                                                   Color:=clBlack;
-                                                   Font.Color:=clYellow;
-                                                   visible:=true;
-                                                   Height:=100;
-                                               end;
-
-
-
-                                           {A Splitter to increase/decrease the size of the StdError display}
-                                           ASplitter:=TSplitter.Create(ATabSheet);
-                                            with ASplitter do
-                                                begin
-                                                     Parent :=ATabSheet;
-                                                     Cursor := crVSplit;
-                                                     top:=20;
-                                                     ResizeAnchor := akBottom;
-                                                     Left := 0;
-                                                     Height := 2;
-                                                     ParentColor:=False;
-                                                     Color:=clDefault;
-                                                     Align:= alTop;
-                                                end;
-
-                                           AListBox.Align:=alClient;
-
-                                           {Create container panel for StdInput.
-                                           To mimick the prompt, a TLabel is placed on the left of a TEdit (see below)}
-                                           APanelInput:=Tpanel.create(ATabSheet);
-                                           with  APanelInput do
-                                               begin
-                                                    Parent:=ATabSheet;
-                                                    Left := 0;
-                                                    Height := 30;
-                                                    Align := alBottom;
-                                                    BevelOuter := bvNone;
-                                                    BorderStyle:=bsSingle;
-                                                    Color := clBlack;
-                                                    ParentColor := False;
-                                                    ParentFont := True;
-                                               end;
-
-                                           {Create an input line for StdInput}
-                                           anEdit:=TEdit.Create(APanelInput);
-                                           with anEdit do
-                                               begin
-                                                   Parent:=APanelInput;
-                                                   Left := 9*(Length(anExecutable)+5)+1;
-                                                   Height := 30;
-                                                   Top := 1;
-                                                   Anchors := [akTop, akLeft, akRight];
-                                                   echoMode:=emNormal;
-                                                   onKeyPress:=@EditInputKeyPress;
-                                                   onDblClick:=@EditInputDblClick;
-                                                   BorderStyle := bsNone;
-                                                   Color := clBlack;
-                                                   Font.Color := clLime;
-                                                   TabOrder := 0;
-                                                   ParentFont := False;
-                                                   Text :=''
-                                               end;
-
-
-                                          {Create a prompt label for StdInput}
-                                          aLabel :=TLabel.create(APanelInput);
-                                          with aLabel do
+                                                   finally
+                                                     aDocStringsParams.Free
+                                                   end;
+                                             end
+                                          else
                                               begin
-                                                   Parent:=APanelInput;
-                                                    Left := 1 ;
-                                                    Height := 25 ;
-                                                    Top := 0;
-                                                    Width := 20;
-                                                    Alignment := taLeftJustify;
-                                                    AutoSize := True ;
-                                                    Caption := anExecutable+' >>> ' ;
-                                                    Color := clBlack ;
-                                                    Font.Color := clLime;
-                                                    ParentColor := False;
-                                                    ParentFont := False;
-                                                    Transparent := False ;
+                                                    DocStrings:='';
+                                                    Message:='Error=Script not found: ' + aScriptFilename
                                               end;
 
+                                          ScriptId:=Counter;
+                                          Counter:=Counter+1;
 
-                                           {------ End of Step3}
+                                     end;
 
-                                           {Step4: Reset reading blocs}
-                                           ParamStringList.Clear;
-                                           ThreadStringList.Clear;
+                                 if aNickName='' then aNickName:=ExtractFileName(aScriptFilename);
+                                 ListBoxScripts.AddItem(aNickName,anAsyncProcess);//Add item on list of scripts
 
+
+
+
+                                 {------ End of Step2}
+
+
+                                 {Step3: Add a tabsheet for this thread's StdOutput}
+                                 ATabSheet:= PageControlOutput.AddTabSheet;
+                                 with ATabSheet do
+                                     begin
+                                       Caption:= aNickName;
+                                       TabVisible:=False;
+                                       ATabSheet.Color:=clblack;
+                                     end;
+
+
+                                 {Displays StdOutput }
+                                 AListBox:=TListBox.Create(ATabSheet);
+                                 with AListBox do
+                                     begin
+                                       Parent:=ATabSheet;
+                                       BorderStyle :=bsNone;
+                                       Align:=alBottom;
+                                       Color:=clBlack;
+                                       Font.Color:=clwhite;
+                                       visible:=true;
+                                       Height:=20;
+                                     end;
+
+
+
+                                 {Displays StdError}
+                                 AnErrorListBox:=TListBox.Create(ATabSheet);
+                                 with AnErrorListBox do
+                                     begin
+                                         Parent:=ATabSheet;
+                                         BorderStyle :=bsNone;
+                                         Align:=alTop;
+                                         Color:=clBlack;
+                                         Font.Color:=clYellow;
+                                         visible:=true;
+                                         Height:=100;
+                                     end;
+
+
+
+                                 {A Splitter to increase/decrease the size of the StdError display}
+                                 ASplitter:=TSplitter.Create(ATabSheet);
+                                  with ASplitter do
+                                      begin
+                                           Parent :=ATabSheet;
+                                           Cursor := crVSplit;
+                                           top:=20;
+                                           ResizeAnchor := akBottom;
+                                           Left := 0;
+                                           Height := 2;
+                                           ParentColor:=False;
+                                           Color:=clDefault;
+                                           Align:= alTop;
+                                      end;
+
+                                 AListBox.Align:=alClient;
+
+                                 {Create container panel for StdInput.
+                                 To mimick the prompt, a TLabel is placed on the left of a TEdit (see below)}
+                                 APanelInput:=Tpanel.create(ATabSheet);
+                                 with  APanelInput do
+                                     begin
+                                          Parent:=ATabSheet;
+                                          Left := 0;
+                                          Height := 30;
+                                          Align := alBottom;
+                                          BevelOuter := bvNone;
+                                          BorderStyle:=bsSingle;
+                                          Color := clBlack;
+                                          ParentColor := False;
+                                          ParentFont := True;
+                                     end;
+
+                                 {Create an input line for StdInput}
+                                 anEdit:=TEdit.Create(APanelInput);
+                                 with anEdit do
+                                     begin
+                                         Parent:=APanelInput;
+                                         Left := 9*(Length(anExecutable)+5)+1;
+                                         Height := 30;
+                                         Top := 1;
+                                         Anchors := [akTop, akLeft, akRight];
+                                         echoMode:=emNormal;
+                                         onKeyPress:=@EditInputKeyPress;
+                                         onDblClick:=@EditInputDblClick;
+                                         BorderStyle := bsNone;
+                                         Color := clBlack;
+                                         Font.Color := clLime;
+                                         TabOrder := 0;
+                                         ParentFont := False;
+                                         Text :=''
+                                     end;
+
+
+                                {Create a prompt label for StdInput}
+                                aLabel :=TLabel.create(APanelInput);
+                                with aLabel do
+                                    begin
+                                         Parent:=APanelInput;
+                                          Left := 1 ;
+                                          Height := 25 ;
+                                          Top := 0;
+                                          Width := 20;
+                                          Alignment := taLeftJustify;
+                                          AutoSize := True ;
+                                          Caption := anExecutable+' >>> ' ;
+                                          Color := clBlack ;
+                                          Font.Color := clLime;
+                                          ParentColor := False;
+                                          ParentFont := False;
+                                          Transparent := False ;
                                     end;
 
 
-                                   i:=i+1;
-                                 end;
-                     end;
-                  CurrentFileName:=Filename ;
-                  ToolButtonSaveAs.Enabled:=True;
-                  if ListBoxScripts.Count>0 then
-                     begin
-                          ListBoxScripts.ItemIndex:=0;
-                          ListBoxScripts.Selected[0]:=true;
-                          ListBoxScriptsClick(nil)
-                     end;
-                  ListBoxScripts.Repaint;
-                  Application.ProcessMessages;
+                                 {------ End of Step3}
 
-               finally
-                      WBStringList.Free;
-                      ParamStringList.Free;
-                      ThreadStringList.Free;
+                                 {Step4: Reset reading blocs}
+                                 ParamStringList.Clear;
+                                 ThreadStringList.Clear;
 
-               end;
+                          end;
 
 
+                         i:=i+1;
+                       end;
+           end;
+        ToolButtonSaveAs.Enabled:=True;
+        if ListBoxScripts.Count>0 then
+           begin
+                ListBoxScripts.ItemIndex:=0;
+                ListBoxScripts.Selected[0]:=true;
+                ListBoxScriptsClick(nil)
+           end;
+        ListBoxScripts.Repaint;
+        Application.ProcessMessages;
 
-       end;
+     finally
+            WBStringList.Free;
+            ParamStringList.Free;
+            ThreadStringList.Free;
+
+     end;
+
 end;
 
 procedure TFMain.TabSheet1ContextPopup(Sender: TObject; MousePos: TPoint;
@@ -674,9 +669,38 @@ Var
 
 procedure TFMain.ToolButton2Click(Sender: TObject);
 begin
-     OpenWorkBook;
-     ListBoxScripts.repaint;
-     application.ProcessMessages;
+     with OpenDialogScript do
+       begin
+            FilterIndex:=2;
+            if Execute then
+               begin
+                    CurrentFileName:=Filename;
+                    OpenWorkBook;
+                    ListBoxScripts.repaint;
+                    application.ProcessMessages;
+
+               end;
+
+       end;
+end;
+
+procedure TFMain.ToolButtonNewClick(Sender: TObject);
+var AStringList:TStringList;
+begin
+  with OpenDialogNew do
+      if Execute then
+         try
+            AStringList:=TStringList.Create;
+            AStringList.Add('ScriptName='+FileName);
+            CurrentFileName:='~temp.wbl';
+            AStringList.SaveToFile(CurrentFileName);
+
+            OpenWorkBook;
+            SaveDialog1.FileName:=CurrentFileName;
+            ToolButtonSaveAsClick(nil)
+         finally
+                AStringList.Free
+         end;
 end;
 
 procedure TFMain.ToolButtonRemoveClick(Sender: TObject);
@@ -911,6 +935,13 @@ begin
     DefaultOpening :=StrToBool(Trim(AStringList.Values['DEFAULT OPENING']));
     OutputHeight := StrToInt(Trim(AStringList.Values['OUTPUT HEIGHT']));
     OpenDialogScript.FileName:=LastWorkbook;
+    if LastWorkbook<>'' then
+     begin
+       CurrentFileName:=LastWorkbook;
+       OpenDialogScript.FileName:=LastWorkbook;
+       SaveDialog1.FileName:=LastWorkbook;
+       OpenWorkBook;
+     end;
 
     FMain.Width:=FormWidth;
     FMain.Height:=FormHeight;
@@ -919,9 +950,9 @@ begin
     GroupBoxOutputs.Height:=OutputHeight;
 
     OpenDialogScript.InitialDir:= WorkingDir;
-    OpenDialog2.InitialDir:= WorkingDir;
+    OpenDialogNew.InitialDir:= WorkingDir;
     SaveDialog1.InitialDir:= WorkingDir;
-    CurrentFileName:='';
+
    finally
           AStringList.Free
    end;
@@ -1320,7 +1351,7 @@ end;
 procedure TFMain.MenuItem8Click(Sender: TObject);
 
 begin
-  with OpenDialog2 do
+  with OpenDialogNew do
        if execute then
           begin
             MemoParams.Lines.LoadFromFile(filename);

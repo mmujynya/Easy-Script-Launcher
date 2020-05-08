@@ -19,7 +19,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <BuildNr Value="6"/>
+      <BuildNr Value="8"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable CompanyName="MCIC LLC" FileDescription="Easy Script Launcher (Python, Bash...)" LegalCopyright="© Max Mujynya 2020"/>
     </VersionInfo>
