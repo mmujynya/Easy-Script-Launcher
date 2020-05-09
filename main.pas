@@ -978,7 +978,11 @@ begin
              if (anAsyncProcess.RunNb>0) then ExecTimes  :='Started: '+FormatDateTime('hh:mm:ss',anAsyncProcess.startTime)+' - Finished: '+ FormatDateTime('hh:mm:ss',anAsyncProcess.FinishTime);
              MemoDocStrings.lines.clear;
              MemoDocStrings.lines.add(anAsyncProcess.Message+chr(13)+ExecTimes+chr(13)+anAsyncProcess.DocStrings);
-             MemoParams.ReadOnly:= not(anAsyncProcess.Running);
+             if anAsyncProcess.Running then
+                begin
+                     GroupBoxParams.Caption:='Parameters';
+                     MemoParams.ReadOnly:= True;
+                end ;
              PageControlOutput.ActivePageIndex:=ScriptPosition;
         end;
 end;
@@ -1108,6 +1112,7 @@ begin
      if ReadOnly then
         begin
           ReadOnly:=False;
+          GroupBoxParams.Caption:='Parameters - Edit mode';
           Hint:='Double-click to disable editing';
           Color:=clDefault
 
@@ -1115,6 +1120,7 @@ begin
      else
          begin
               ReadOnly:=True;
+              GroupBoxParams.Caption:='Parameters';
               Hint:='Double-click to edit';
               Color:=clBtnFace
          end;

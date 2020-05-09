@@ -4,13 +4,13 @@ object FMain: TFMain
   Top = 70
   Width = 532
   Caption = 'Easy Script Launcher'
-  ClientHeight = 612
+  ClientHeight = 606
   ClientWidth = 532
   Constraints.MinHeight = 612
   Font.CharSet = ANSI_CHARSET
   Font.Color = clBlack
-  Font.Height = -14
-  Font.Name = 'Segoe UI'
+  Font.Height = -13
+  Font.Name = 'Sans'
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
   Icon.Data = {
@@ -158,7 +158,7 @@ object FMain: TFMain
   object StatusBar1: TStatusBar
     Left = 0
     Height = 24
-    Top = 588
+    Top = 582
     Width = 532
     Constraints.MinHeight = 24
     Font.CharSet = ANSI_CHARSET
