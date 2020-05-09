@@ -1,16 +1,15 @@
 object FMain: TFMain
   Left = 834
-  Height = 765
-  Top = 205
-  Width = 665
+  Height = 612
+  Top = 70
+  Width = 532
   Caption = 'Easy Script Launcher'
-  ClientHeight = 765
-  ClientWidth = 665
-  Constraints.MinHeight = 765
-  DesignTimePPI = 120
+  ClientHeight = 612
+  ClientWidth = 532
+  Constraints.MinHeight = 612
   Font.CharSet = ANSI_CHARSET
   Font.Color = clBlack
-  Font.Height = -17
+  Font.Height = -14
   Font.Name = 'Segoe UI'
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
@@ -158,45 +157,59 @@ object FMain: TFMain
   LCLVersion = '2.0.8.0'
   object StatusBar1: TStatusBar
     Left = 0
-    Height = 30
-    Top = 735
-    Width = 665
-    Constraints.MinHeight = 30
+    Height = 24
+    Top = 588
+    Width = 532
+    Constraints.MinHeight = 24
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
-    Font.Height = -17
+    Font.Height = -14
     Font.Name = 'Segoe UI'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     Panels = <    
       item
         Alignment = taCenter
-        Width = 25
+        Width = 20
       end    
       item
-        Width = 625
+        Width = 500
       end>
     ParentFont = False
     SimplePanel = False
   end
   object GroupBoxOutputs: TGroupBox
     Left = 0
-    Height = 200
-    Top = 536
-    Width = 665
+    Height = 160
+    Top = 429
+    Width = 532
     Align = alClient
     Caption = 'Thread I/O'
-    ClientHeight = 172
-    ClientWidth = 661
-    Constraints.MinHeight = 200
+    ClientHeight = 142
+    ClientWidth = 530
+    Constraints.MinHeight = 160
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -14
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
     ParentColor = False
+    ParentFont = False
     TabOrder = 1
     object PageControlOutput: TPageControl
       Left = 0
-      Height = 172
+      Height = 142
       Top = 0
-      Width = 661
+      Width = 530
       Align = alClient
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clBlack
+      Font.Height = -14
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      ParentFont = False
       TabOrder = 0
       TabPosition = tpBottom
       Options = [nboShowCloseButtons]
@@ -205,52 +218,59 @@ object FMain: TFMain
   object Splitter2: TSplitter
     Cursor = crVSplit
     Left = 0
-    Height = 4
-    Top = 532
-    Width = 665
+    Height = 3
+    Top = 426
+    Width = 532
     Align = alTop
     MinSize = 200
     ResizeAnchor = akTop
   end
   object PanelScripts: TPanel
     Left = 0
-    Height = 480
-    Top = 52
-    Width = 665
+    Height = 384
+    Top = 42
+    Width = 532
     Align = alTop
     BevelOuter = bvNone
-    ClientHeight = 480
-    ClientWidth = 665
+    ClientHeight = 384
+    ClientWidth = 532
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -14
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
     TabOrder = 3
     object GroupBox1: TGroupBox
-      Left = 262
-      Height = 480
+      Left = 210
+      Height = 384
       Top = 0
-      Width = 403
+      Width = 322
       Align = alClient
       Caption = 'Description'
-      ClientHeight = 452
-      ClientWidth = 399
+      ClientHeight = 366
+      ClientWidth = 320
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
-      Font.Height = -17
+      Font.Height = -14
       Font.Name = 'Segoe UI'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
       ParentFont = False
       TabOrder = 0
       object MemoDocStrings: TMemo
-        Left = 5
-        Height = 141
-        Top = 5
-        Width = 389
+        Left = 4
+        Height = 113
+        Top = 4
+        Width = 312
         Align = alTop
-        BorderSpacing.Around = 5
+        BorderSpacing.Around = 4
         BorderStyle = bsNone
         Color = clBtnFace
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
-        Font.Height = -17
+        Font.Height = -14
         Font.Name = 'Segoe UI'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
@@ -262,42 +282,42 @@ object FMain: TFMain
       object Splitter3: TSplitter
         Cursor = crVSplit
         Left = 0
-        Height = 6
-        Top = 151
-        Width = 399
+        Height = 5
+        Top = 121
+        Width = 320
         Align = alTop
         ResizeAnchor = akTop
       end
       object GroupBoxParams: TGroupBox
         Left = 0
-        Height = 295
-        Top = 157
-        Width = 399
+        Height = 240
+        Top = 126
+        Width = 320
         Align = alClient
         Caption = 'Parameters'
-        ClientHeight = 267
-        ClientWidth = 395
+        ClientHeight = 222
+        ClientWidth = 318
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
-        Font.Height = -17
+        Font.Height = -14
         Font.Name = 'Segoe UI'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
         ParentFont = False
         TabOrder = 2
         object MemoParams: TMemo
-          Left = 5
-          Height = 257
+          Left = 4
+          Height = 214
           Hint = 'Double-click to edit'
-          Top = 5
-          Width = 385
+          Top = 4
+          Width = 310
           Align = alClient
-          BorderSpacing.Around = 5
+          BorderSpacing.Around = 4
           BorderStyle = bsNone
           Color = clBtnFace
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
-          Font.Height = -17
+          Font.Height = -14
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -315,16 +335,16 @@ object FMain: TFMain
     end
     object GroupBox2: TGroupBox
       Left = 0
-      Height = 480
+      Height = 384
       Top = 0
-      Width = 256
+      Width = 205
       Align = alLeft
       Caption = 'Scripts'
-      ClientHeight = 452
-      ClientWidth = 252
+      ClientHeight = 366
+      ClientWidth = 203
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
-      Font.Height = -17
+      Font.Height = -14
       Font.Name = 'Segoe UI'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
@@ -333,14 +353,14 @@ object FMain: TFMain
       TabOrder = 1
       object ListBoxScripts: TListBox
         Left = 0
-        Height = 392
+        Height = 318
         Top = 0
-        Width = 252
+        Width = 203
         Align = alClient
         BorderStyle = bsNone
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
-        Font.Height = -15
+        Font.Height = -12
         Font.Name = 'Segoe UI'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
@@ -352,39 +372,54 @@ object FMain: TFMain
         OnMeasureItem = ListBoxScriptsMeasureItem
         ParentFont = False
         PopupMenu = PopupMenuScripts
-        ScrollWidth = 171
+        ScrollWidth = 203
         Style = lbOwnerDrawVariable
         TabOrder = 0
+        TopIndex = -1
       end
       object PanelLegend: TPanel
         Left = 0
-        Height = 60
-        Top = 392
-        Width = 252
+        Height = 48
+        Top = 318
+        Width = 203
         Align = alBottom
         BevelOuter = bvNone
-        ClientHeight = 60
-        ClientWidth = 252
+        ClientHeight = 48
+        ClientWidth = 203
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -14
+        Font.Name = 'Segoe UI'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 1
         object Panel1: TPanel
-          Left = 9
-          Height = 20
-          Top = 8
-          Width = 20
+          Left = 7
+          Height = 16
+          Top = 6
+          Width = 16
           BevelOuter = bvNone
           Color = 8437759
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -14
+          Font.Name = 'Segoe UI'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
           ParentColor = False
+          ParentFont = False
           TabOrder = 0
         end
         object Label1: TLabel
-          Left = 38
-          Height = 23
-          Top = 5
-          Width = 136
+          Left = 30
+          Height = 15
+          Top = 4
+          Width = 129
           Caption = 'Successor threads'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
-          Font.Height = -17
+          Font.Height = -14
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -392,24 +427,31 @@ object FMain: TFMain
           ParentFont = False
         end
         object Panel2: TPanel
-          Left = 9
-          Height = 20
-          Top = 32
-          Width = 20
+          Left = 7
+          Height = 16
+          Top = 26
+          Width = 16
           BevelOuter = bvNone
           Color = 7864183
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -14
+          Font.Name = 'Segoe UI'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
           ParentColor = False
+          ParentFont = False
           TabOrder = 1
         end
         object Label2: TLabel
-          Left = 38
-          Height = 23
-          Top = 32
-          Width = 149
+          Left = 30
+          Height = 15
+          Top = 26
+          Width = 139
           Caption = 'Predecessor Thread'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
-          Font.Height = -17
+          Font.Height = -14
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -419,28 +461,28 @@ object FMain: TFMain
       end
     end
     object Splitter1: TSplitter
-      Left = 256
-      Height = 480
+      Left = 205
+      Height = 384
       Top = 0
-      Width = 6
+      Width = 5
     end
   end
   object ToolBar1: TToolBar
     Left = 0
-    Height = 50
+    Height = 40
     Top = 2
-    Width = 665
+    Width = 532
     AutoSize = True
     BorderSpacing.Top = 2
-    ButtonHeight = 50
-    ButtonWidth = 60
+    ButtonHeight = 40
+    ButtonWidth = 48
     Caption = 'ToolBar1'
     EdgeInner = esNone
     EdgeOuter = esNone
     Font.CharSet = ANSI_CHARSET
-    Font.Color = clScrollBar
-    Font.Height = -17
-    Font.Name = 'Segoe UI'
+    Font.Color = clBtnText
+    Font.Height = -13
+    Font.Name = 'Sans'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     Images = ImageList1
@@ -449,7 +491,7 @@ object FMain: TFMain
     TabOrder = 4
     Transparent = True
     object ToolButtonSave: TToolButton
-      Left = 198
+      Left = 167
       Top = 0
       Caption = 'Save'
       Enabled = False
@@ -465,35 +507,35 @@ object FMain: TFMain
       OnClick = ToolButton2Click
     end
     object ToolButtonAbout: TToolButton
-      Left = 400
+      Left = 339
       Top = 0
       Caption = 'About'
       ImageIndex = 11
       OnClick = ToolButtonAboutClick
     end
     object ToolButtonExit: TToolButton
-      Left = 332
+      Left = 283
       Top = 0
       Caption = 'Exit'
       ImageIndex = 10
       OnClick = ToolButtonExitClick
     end
     object ToolButton1: TToolButton
-      Left = 392
-      Height = 50
+      Left = 331
+      Height = 40
       Top = 0
       Caption = 'ToolButton1'
       Style = tbsSeparator
     end
     object ToolButton3: TToolButton
-      Left = 324
-      Height = 50
+      Left = 275
+      Height = 40
       Top = 0
       Caption = 'ToolButton3'
       Style = tbsSeparator
     end
     object ToolButtonSaveAs: TToolButton
-      Left = 258
+      Left = 215
       Top = 0
       Caption = 'Save As'
       Enabled = False
@@ -501,21 +543,21 @@ object FMain: TFMain
       OnClick = ToolButtonSaveAsClick
     end
     object ToolButtonRemove: TToolButton
-      Left = 61
+      Left = 49
       Top = 0
       Caption = 'Remove'
       ImageIndex = 21
       OnClick = ToolButtonRemoveClick
     end
     object ToolButton4: TToolButton
-      Left = 190
-      Height = 50
+      Left = 159
+      Height = 40
       Top = 0
       Caption = 'ToolButton4'
       Style = tbsSeparator
     end
     object ToolButtonNew: TToolButton
-      Left = 130
+      Left = 111
       Top = 0
       Caption = 'New'
       ImageIndex = 22
@@ -525,8 +567,8 @@ object FMain: TFMain
   object OpenDialogScript: TOpenDialog
     Title = 'Open Workbook'
     Filter = 'Python script|*.py|Workbook Loose|*.wbl|Workbook Container|*.wbl'
-    left = 56
-    top = 216
+    left = 45
+    top = 173
   end
   object AsyncProcess1: TAsyncProcess
     PipeBufferSize = 2048
@@ -547,13 +589,13 @@ object FMain: TFMain
     WindowWidth = 0
     FillAttribute = 0
     OnTerminate = AsyncProcess1Terminate
-    left = 73
-    top = 144
+    left = 58
+    top = 115
   end
   object MainMenu1: TMainMenu
     Images = ImageList1
-    left = 120
-    top = 144
+    left = 96
+    top = 115
     object MenuItem1: TMenuItem
       Caption = 'File'
       Visible = False
@@ -581,17 +623,17 @@ object FMain: TFMain
   object OpenDialogNew: TOpenDialog
     Title = 'Open a script'
     Filter = 'Python Script|*.py|Bash Script|*.sh'
-    left = 474
-    top = 163
+    left = 379
+    top = 130
   end
   object SaveDialog1: TSaveDialog
     Filter = 'Python parameters|*.par|Workbook Loose|*.wbl|Workbook Container|*.wbc'
-    left = 672
-    top = 48
+    left = 538
+    top = 38
   end
   object PopupMenu_Par: TPopupMenu
-    left = 584
-    top = 148
+    left = 467
+    top = 118
     object MenuItem8: TMenuItem
       Caption = 'Load Parameters'
       OnClick = MenuItem8Click
@@ -603,8 +645,8 @@ object FMain: TFMain
   end
   object PopupMenuScripts: TPopupMenu
     OnPopup = PopupMenuScriptsPopup
-    left = 85
-    top = 44
+    left = 68
+    top = 35
     object MenuItemStart: TMenuItem
       Caption = 'Start'
       OnClick = MenuItemStartClick
@@ -672,8 +714,8 @@ object FMain: TFMain
     end
   end
   object ImageList1: TImageList
-    left = 288
-    top = 223
+    left = 230
+    top = 178
     Bitmap = {
       4C691E00000010000000100000000000000000000000000000001F0B000A4E1B
       0062973E05A7A55414EFA8591BFEA8591BFEA55414EF973E05A74E1B00621F0B
@@ -1641,31 +1683,31 @@ object FMain: TFMain
   object TimerScripts: TTimer
     Interval = 2000
     OnTimer = TimerScriptsTimer
-    left = 240
-    top = 54
+    left = 192
+    top = 43
   end
   object Timer1: TTimer
-    left = 121
-    top = 44
+    left = 97
+    top = 35
   end
   object TimerStatus: TTimer
     Enabled = False
     Interval = 50
     OnTimer = TimerStatusTimer
-    left = 330
-    top = 20
+    left = 264
+    top = 16
   end
   object PopupMenupar: TPopupMenu
-    left = 420
-    top = 310
+    left = 336
+    top = 248
     object MenuItemEditParams: TMenuItem
       Caption = 'Edit Parameters'
       OnClick = MenuItemEditParamsClick
     end
   end
   object ImageList2: TImageList
-    left = 416
-    top = 560
+    left = 333
+    top = 448
     Bitmap = {
       4C69010000001000000010000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF

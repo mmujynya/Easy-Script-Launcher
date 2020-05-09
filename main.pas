@@ -397,19 +397,20 @@ begin
                                      begin
                                        Caption:= aNickName;
                                        TabVisible:=False;
-                                       ATabSheet.Color:=clblack;
+                                       Color:=clBlack;
                                      end;
 
 
                                  {Displays StdOutput }
                                  AListBox:=TListBox.Create(ATabSheet);
+                                 AListBox.ParentColor:=false;;
                                  with AListBox do
                                      begin
                                        Parent:=ATabSheet;
                                        BorderStyle :=bsNone;
                                        Align:=alBottom;
                                        Color:=clBlack;
-                                       Font.Color:=clwhite;
+                                       Font.Color:=clWhite;
                                        visible:=true;
                                        Height:=20;
                                      end;
@@ -480,7 +481,7 @@ begin
                                          Color := clBlack;
                                          Font.Color := clLime;
                                          TabOrder := 0;
-                                         ParentFont := False;
+                                        // ParentFont := False;
                                          Text :=''
                                      end;
 
@@ -606,7 +607,8 @@ Var
                            if anOutput<>'' then
                              begin
                                   Items.text:=anOutput;
-                                  {$IFDEF Linux} if Count<>lbPreviousCount then  {$ENDIF}
+
+                                  {$IFDEF Linux}color:=clBlack; if Count<>lbPreviousCount then  {$ENDIF}
                                   ItemIndex:=count-1;
                                   Visible:=True;
                                   Repaint;
@@ -631,6 +633,7 @@ Var
                            if anError<>'' then
                              begin
                                   Items.text:=anError;
+                                  {$IFDEF Linux}color:=clBlack;  {$ENDIF}
                                   ItemIndex:=count-1;
                                   Visible:=True;
                                   Repaint;
@@ -975,7 +978,7 @@ begin
              if (anAsyncProcess.RunNb>0) then ExecTimes  :='Started: '+FormatDateTime('hh:mm:ss',anAsyncProcess.startTime)+' - Finished: '+ FormatDateTime('hh:mm:ss',anAsyncProcess.FinishTime);
              MemoDocStrings.lines.clear;
              MemoDocStrings.lines.add(anAsyncProcess.Message+chr(13)+ExecTimes+chr(13)+anAsyncProcess.DocStrings);
-             MemoParams.Enabled:= not(anAsyncProcess.Running);
+             MemoParams.ReadOnly:= not(anAsyncProcess.Running);
              PageControlOutput.ActivePageIndex:=ScriptPosition;
         end;
 end;
