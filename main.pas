@@ -1,3 +1,4 @@
+{%RunWorkingDir /Users/Max/ESL}
 unit Main;
 
 {$mode objfpc}{$H+}
@@ -10,7 +11,7 @@ uses
 const
   BUF_SIZE = 1024; // Buffer size for reading the output in chunks
 var
-   WorkingDir,DefaultExecutable,Separator,bash_mount,CurrentFileName,LastWorkbook:String;
+   WorkingDir,DefaultExecutable,Separator,bash_mount,CurrentFileName,LastWorkbook,AppDir:String;
    DefaultTimeThreshold,FormWidth,FormHeight,FormTop,FormLeft,OutputHeight:integer;
    LoadLastWorkbook,DefaultOpening:boolean;
 
@@ -71,7 +72,6 @@ type
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     StatusBar1: TStatusBar;
-    Timer1: TTimer;
     TimerStatus: TTimer;
     TimerScripts: TTimer;
     ToolBar1: TToolBar;
@@ -138,6 +138,7 @@ type
     procedure OpenWorkbook;
     procedure TabSheet1ContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
+    procedure Timer1Timer(Sender: TObject);
     procedure TimerScriptsTimer(Sender: TObject);
 
     procedure TimerStatusTimer(Sender: TObject);
@@ -174,6 +175,7 @@ procedure TFMain.SaveWorkBook;
 var
    WBStringList:TStringList;
    i,j:integer;
+   AThreadParameter:String;
 begin
      try
        WBStringList:=TStringList.Create;
@@ -194,7 +196,10 @@ begin
                                    if Priority = ppRealTime then WBStringList.Add('*Priority=ppRealTime')
                                 end;
                              for j:=1 to Parameters.Count-1 do
-                                 WBStringList.Add(Parameters[j]);
+                                 begin
+                                   AThreadParameter:=Parameters[j];
+                                   if length(AThreadParameter)>0 then WBStringList.Add(AThreadParameter);
+                                 end
                         end;
                  WBStringList.Add(Separator)
             end;
@@ -263,14 +268,18 @@ begin
                             end;
 
                          // if Aline is a thread value store it in the thread params list (not a parameter to be provided to the script )
-                         if Aline[1]='*' then ThreadStringList.add(RightStr(Aline,length(Aline)-1))
-                            else
-                                  if Aline<>Separator then ParamStringList.add(Aline); //Separators are ignored
+                         if length(Aline)>0 then
+                            begin
+                                   if Aline[1]='*' then ThreadStringList.add(RightStr(Aline,length(Aline)-1))
+                                else
+                                      if Aline<>Separator then ParamStringList.add(Aline); //Separators are ignored
 
-                         if (i = WBLinesNb-1) then
-                            EndBlock := True
-                         else
-                             EndBlock := pos(KeyWordScript, WBStringList[i+1])<>0;
+                             if (i = WBLinesNb-1) then
+                                EndBlock := True
+                             else
+                                 EndBlock := pos(KeyWordScript, WBStringList[i+1])<>0;
+
+                            end;
 
                          {Parsing of a thread block in the workbook is done: create the thread and add a corresponding entry in the list of scripts}
                          if  (BeginBlock and EndBlock) and (ParamStringList.count>0) then
@@ -318,7 +327,8 @@ begin
 
 
                                           FillAttribute:=0;
-                                          Options:=[poUsePipes];
+                                          Options:=[poUsePipes,poNoConsole] ;
+                                          ShowWindow:=swoNone;
                                           PipeBufferSize:=BUF_SIZE;
                                           CurrentDirectory:=WorkingDir;
                                           ErrorCode:=0;
@@ -412,7 +422,7 @@ begin
                                        Color:=clBlack;
                                        Font.Color:=clWhite;
                                        visible:=true;
-                                       Height:=20;
+                                       Height:=50;
                                      end;
 
 
@@ -427,7 +437,7 @@ begin
                                          Color:=clBlack;
                                          Font.Color:=clYellow;
                                          visible:=true;
-                                         Height:=100;
+                                         Height:=50;
                                      end;
 
 
@@ -543,14 +553,21 @@ begin
 
 end;
 
+procedure TFMain.Timer1Timer(Sender: TObject);
+begin
+
+end;
+
 procedure TFMain.TimerScriptsTimer(Sender: TObject);
-{$IFDEF Linux}
+{$IFDEF Windows}
+{$ELSE}
 var
    index:integer;
    AnAsyncProcess: TModAsyncProcess;
 {$ENDIF}
 begin
-     {$IFDEF Linux} //Workaround because OnTerminate not called for TModAsyncProcess on Linux
+  {$IFDEF Windows}
+  {$ELSE}     //{$IFDEF Linux} //Workaround because OnTerminate not called for TModAsyncProcess on Linux
      for index:=0 to ListBoxScripts.Count-1 do
 
          begin
@@ -695,7 +712,7 @@ begin
          try
             AStringList:=TStringList.Create;
             AStringList.Add('ScriptName='+FileName);
-            CurrentFileName:='~temp.wbl';
+            CurrentFileName:='/Users/Max/ESL/temp.wbl';
             AStringList.SaveToFile(CurrentFileName);
 
             OpenWorkBook;
@@ -827,6 +844,7 @@ procedure TFMain.AsyncProcess1Terminate(Sender: TObject);
                     for anIndex:=0 to ListOfSuccessors.Count-1 do
                         begin
                            AScriptID:= strToInt(ListOfSuccessors[anIndex]);
+                           if (AScriptID <= ListBoxScripts.Count-1) and (AScriptID>=0) then
                            with (ListBoxScripts.Items.Objects[AScriptID] as TModAsyncProcess)do
                               begin
                                 if Running then MessageDlg('Error','Process: '+NickName+' is already running!',mterror,[mbok],0) else
@@ -901,7 +919,7 @@ var AStringList:TStringList;
 begin
      try
         AStringList:=TStringList.Create;
-        AStringList.LoadFromFile('easyscriptlauncher.ini');
+        AStringList.LoadFromFile(AppDir+'easyscriptlauncher.ini');
         AStringList.Values['FORM WIDTH']:=IntToStr(FMain.Width);
         AStringList.Values['FORM HEIGHT']:=IntToStr(FMain.Height);
         AStringList.Values['FORM TOP']:=IntToStr(FMain.Top);
@@ -909,7 +927,7 @@ begin
         if ListBoxScripts.Count >0 then AStringList.Values['LAST WORKBOOK']:= OpenDialogScript.FileName else
         AStringList.Values['LAST WORKBOOK']:='' ;
 
-        AStringList.SaveToFile('easyscriptlauncher.ini');
+        AStringList.SaveToFile(AppDir+'easyscriptlauncher.ini');
      finally
             AStringList.Free
      end;
@@ -918,12 +936,21 @@ end;
 
 
 procedure TFMain.FormShow(Sender: TObject);
-var AStringList:TStringList;
+var
+   AStringList:TStringList;
+
 begin
   try
     {Loads and reads program initialization file}
     AStringList:=TStringList.Create;
-    AStringList.LoadFromFile('easyscriptlauncher.ini');
+     AppDir:=Application.Location;
+    {$IFDEF DARWIN}
+     AppDir:=LeftStr(AppDir,length(AppDir)-length('/Contents/MacOS/'));
+
+
+    {$ENDIF}
+    AppDir:=ExtractFilePath(AppDir);
+    AStringList.LoadFromFile(AppDir+'easyscriptlauncher.ini');
     WorkingDir:= Trim(AStringList.Values['DIRECTORY']);
     DefaultExecutable:= Trim(AStringList.Values['EXECUTABLE']);
     Separator:=Trim(AStringList.Values['SEPARATOR']);
@@ -1113,6 +1140,7 @@ begin
         begin
           ReadOnly:=False;
           GroupBoxParams.Caption:='Parameters - Edit mode';
+          GroupBoxParams.Font.Style:=[fsBold];
           Hint:='Double-click to disable editing';
           Color:=clDefault
 
@@ -1121,6 +1149,7 @@ begin
          begin
               ReadOnly:=True;
               GroupBoxParams.Caption:='Parameters';
+              GroupBoxParams.Font.Style:=[];
               Hint:='Double-click to edit';
               Color:=clBtnFace
          end;
@@ -1266,15 +1295,16 @@ begin
                 begin
                      if running then showmessage('Thread is already running') else
                         begin
-                          {$IFDEF Linux} //OnTerminateEvent isn't fired on linux. Workaround using timer TimerScripts checking process tag value
+                          //{$IFDEF Linux} //OnTerminateEvent isn't fired on linux. Workaround using timer TimerScripts checking process tag value
                           Tag:=1;
-                         {$ENDIF}
+                         //{$ENDIF}
                          StdOutput:='';
                          Errors:='';
                          StartTime:=now();
                          LastUpdateTime:= StartTime;
                          ErrorCode:=0;
                          Execute ;
+                        // if running then showmessage('I am running');
                          TimerStatus.Enabled :=true;
                         end;
                 end;

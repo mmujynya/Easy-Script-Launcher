@@ -12,7 +12,7 @@ uses
   AsyncProcess,umodasyncProcess , fileinfo
   , winpeimagereader {need this for reading exe info}
   , elfreader {needed for reading ELF executables}
-  , machoreader, uAbout {needed for reading MACH-O executables}      ;
+  , machoreader, uAbout {needed for reading MACH-O executables} ,dialogs     ;
 var
   FileVerInfo: TFileVersionInfo;
 {$R *.res}
@@ -31,10 +31,12 @@ begin
     writeln('Product version: ',FileVerInfo.VersionStrings.Values['ProductVersion']);}
 
     RequireDerivedFormResource:=True;
-  Application.Title:='EasyScriptLauncher';
+    Application.Title:='EasyScriptLauncher';
     Application.Scaled:=True;
     Application.Initialize;
+
     Application.CreateForm(TFMain, FMain);
+
 
     Application.CreateForm(TFAbout, FAbout);
     FAbout.caption:='Easy Script Launcher  '+'Version: '+ FileVerInfo.VersionStrings.Values['FileVersion'];

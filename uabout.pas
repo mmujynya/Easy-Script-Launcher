@@ -3,7 +3,7 @@ unit uAbout;
 {$mode objfpc}{$H+}
  interface
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ColorBox, StdCtrls{$IFDEF Windows},shellapi {$ENDIF};
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ColorBox, StdCtrls,lclintf{$IFDEF Windows},shellapi {$ENDIF};
 
 type
 
@@ -15,7 +15,7 @@ type
     LabelLegal: TLabel;
     LabelCompany: TLabel;
     Memo1: TMemo;
-    procedure FormShow(Sender: TObject);
+
     procedure LabelCompanyClick(Sender: TObject);
   private
 
@@ -32,20 +32,11 @@ implementation
 
 { TFAbout }
 
-procedure TFAbout.FormShow(Sender: TObject);
-begin
-  {$IFDEF Windows}
-  LabelCompany.Font.Color:=clBlue;
-  LabelCompany.Font.Style:=[fsUnderline];
-  LabelCompany.Cursor:=crHandPoint;
-  {$ENDIF}
-end;
+
 
 procedure TFAbout.LabelCompanyClick(Sender: TObject);
 begin
-  {$IFDEF Windows}
-  Shellexecute(handle, 'open', pchar('https://mcicllc.com/'), nil,nil,1)
-  {$ENDIF}
+  OpenUrl('https://mcicllc.com/')
 end;
 
 end.

@@ -1,10 +1,10 @@
 object FMain: TFMain
-  Left = 834
+  Left = 748
   Height = 612
   Top = 70
   Width = 532
   Caption = 'Easy Script Launcher'
-  ClientHeight = 606
+  ClientHeight = 612
   ClientWidth = 532
   Constraints.MinHeight = 612
   Font.CharSet = ANSI_CHARSET
@@ -158,7 +158,7 @@ object FMain: TFMain
   object StatusBar1: TStatusBar
     Left = 0
     Height = 24
-    Top = 582
+    Top = 588
     Width = 532
     Constraints.MinHeight = 24
     Font.CharSet = ANSI_CHARSET
@@ -185,8 +185,8 @@ object FMain: TFMain
     Width = 532
     Align = alClient
     Caption = 'Thread I/O'
-    ClientHeight = 142
-    ClientWidth = 530
+    ClientHeight = 141
+    ClientWidth = 522
     Constraints.MinHeight = 160
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -199,9 +199,9 @@ object FMain: TFMain
     TabOrder = 1
     object PageControlOutput: TPageControl
       Left = 0
-      Height = 142
+      Height = 141
       Top = 0
-      Width = 530
+      Width = 522
       Align = alClient
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
@@ -249,8 +249,8 @@ object FMain: TFMain
       Width = 322
       Align = alClient
       Caption = 'Description'
-      ClientHeight = 366
-      ClientWidth = 320
+      ClientHeight = 365
+      ClientWidth = 312
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -14
@@ -263,7 +263,7 @@ object FMain: TFMain
         Left = 4
         Height = 113
         Top = 4
-        Width = 312
+        Width = 304
         Align = alTop
         BorderSpacing.Around = 4
         BorderStyle = bsNone
@@ -274,6 +274,7 @@ object FMain: TFMain
         Font.Name = 'Segoe UI'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
+        Lines.Strings = (        )
         ParentFont = False
         ReadOnly = True
         ScrollBars = ssAutoBoth
@@ -284,19 +285,19 @@ object FMain: TFMain
         Left = 0
         Height = 5
         Top = 121
-        Width = 320
+        Width = 312
         Align = alTop
         ResizeAnchor = akTop
       end
       object GroupBoxParams: TGroupBox
         Left = 0
-        Height = 240
+        Height = 239
         Top = 126
-        Width = 320
+        Width = 312
         Align = alClient
         Caption = 'Parameters'
-        ClientHeight = 222
-        ClientWidth = 318
+        ClientHeight = 220
+        ClientWidth = 302
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Height = -14
@@ -307,10 +308,10 @@ object FMain: TFMain
         TabOrder = 2
         object MemoParams: TMemo
           Left = 4
-          Height = 214
+          Height = 212
           Hint = 'Double-click to edit'
           Top = 4
-          Width = 310
+          Width = 294
           Align = alClient
           BorderSpacing.Around = 4
           BorderStyle = bsNone
@@ -321,6 +322,7 @@ object FMain: TFMain
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
+          Lines.Strings = (          )
           OnChange = MemoParamsChange
           OnDblClick = MemoParamsDblClick
           ParentFont = False
@@ -340,8 +342,8 @@ object FMain: TFMain
       Width = 205
       Align = alLeft
       Caption = 'Scripts'
-      ClientHeight = 366
-      ClientWidth = 203
+      ClientHeight = 365
+      ClientWidth = 195
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -14
@@ -353,9 +355,9 @@ object FMain: TFMain
       TabOrder = 1
       object ListBoxScripts: TListBox
         Left = 0
-        Height = 318
+        Height = 317
         Top = 0
-        Width = 203
+        Width = 195
         Align = alClient
         BorderStyle = bsNone
         Font.CharSet = ANSI_CHARSET
@@ -372,20 +374,18 @@ object FMain: TFMain
         OnMeasureItem = ListBoxScriptsMeasureItem
         ParentFont = False
         PopupMenu = PopupMenuScripts
-        ScrollWidth = 203
         Style = lbOwnerDrawVariable
         TabOrder = 0
-        TopIndex = -1
       end
       object PanelLegend: TPanel
         Left = 0
         Height = 48
-        Top = 318
-        Width = 203
+        Top = 317
+        Width = 195
         Align = alBottom
         BevelOuter = bvNone
         ClientHeight = 48
-        ClientWidth = 203
+        ClientWidth = 195
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Height = -14
@@ -413,9 +413,9 @@ object FMain: TFMain
         end
         object Label1: TLabel
           Left = 30
-          Height = 15
+          Height = 17
           Top = 4
-          Width = 129
+          Width = 120
           Caption = 'Successor threads'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -445,9 +445,9 @@ object FMain: TFMain
         end
         object Label2: TLabel
           Left = 30
-          Height = 15
+          Height = 17
           Top = 26
-          Width = 139
+          Width = 130
           Caption = 'Predecessor Thread'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -491,7 +491,7 @@ object FMain: TFMain
     TabOrder = 4
     Transparent = True
     object ToolButtonSave: TToolButton
-      Left = 167
+      Left = 161
       Top = 0
       Caption = 'Save'
       Enabled = False
@@ -507,35 +507,35 @@ object FMain: TFMain
       OnClick = ToolButton2Click
     end
     object ToolButtonAbout: TToolButton
-      Left = 339
+      Left = 329
       Top = 0
       Caption = 'About'
       ImageIndex = 11
       OnClick = ToolButtonAboutClick
     end
     object ToolButtonExit: TToolButton
-      Left = 283
+      Left = 273
       Top = 0
       Caption = 'Exit'
       ImageIndex = 10
       OnClick = ToolButtonExitClick
     end
     object ToolButton1: TToolButton
-      Left = 331
+      Left = 321
       Height = 40
       Top = 0
       Caption = 'ToolButton1'
       Style = tbsSeparator
     end
     object ToolButton3: TToolButton
-      Left = 275
+      Left = 265
       Height = 40
       Top = 0
       Caption = 'ToolButton3'
       Style = tbsSeparator
     end
     object ToolButtonSaveAs: TToolButton
-      Left = 215
+      Left = 209
       Top = 0
       Caption = 'Save As'
       Enabled = False
@@ -550,14 +550,14 @@ object FMain: TFMain
       OnClick = ToolButtonRemoveClick
     end
     object ToolButton4: TToolButton
-      Left = 159
+      Left = 153
       Height = 40
       Top = 0
       Caption = 'ToolButton4'
       Style = tbsSeparator
     end
     object ToolButtonNew: TToolButton
-      Left = 111
+      Left = 105
       Top = 0
       Caption = 'New'
       ImageIndex = 22
@@ -577,10 +577,10 @@ object FMain: TFMain
     Parameters.Strings = (
       '/home/maxm/PSLauncher/twitter_stream_public.py'
     )
-    Options = [poUsePipes]
+    Options = [poUsePipes, poNoConsole]
     Priority = ppNormal
     StartupOptions = []
-    ShowWindow = swoShowDefault
+    ShowWindow = swoNone
     WindowColumns = 0
     WindowHeight = 0
     WindowLeft = 0
@@ -1681,14 +1681,9 @@ object FMain: TFMain
     }
   end
   object TimerScripts: TTimer
-    Interval = 2000
     OnTimer = TimerScriptsTimer
     left = 192
     top = 43
-  end
-  object Timer1: TTimer
-    left = 97
-    top = 35
   end
   object TimerStatus: TTimer
     Enabled = False

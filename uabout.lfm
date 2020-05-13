@@ -1,14 +1,13 @@
 object FAbout: TFAbout
-  Left = 2996
-  Height = 300
+  Left = 880
+  Height = 240
   Top = 343
-  Width = 400
+  Width = 320
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Easy Script Launcher'
-  ClientHeight = 300
-  ClientWidth = 400
-  DesignTimePPI = 120
+  ClientHeight = 240
+  ClientWidth = 320
   Icon.Data = {
     687A00000000010001000000000001002000527A00001600000089504E470D0A
     1A0A0000000D4948445200000200000002000806000000F478D4FA00007A1949
@@ -991,20 +990,19 @@ object FAbout: TFAbout
     24F8DF680CFE3767076B480FD6745FB0469E84476480FF07BFA17DCA8B717766
     0000000049454E44AE426082
   }
-  OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.0.8.0'
   object LabelLegal: TLabel
-    Left = 100
-    Height = 28
-    Top = 22
-    Width = 200
+    Left = 80
+    Height = 22
+    Top = 18
+    Width = 160
     Alignment = taCenter
     AutoSize = False
     Caption = 'LabelLegal'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
-    Font.Height = -20
+    Font.Height = -16
     Font.Name = 'Segoe UI'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
@@ -1012,17 +1010,17 @@ object FAbout: TFAbout
     ParentFont = False
   end
   object LabelCompany: TLabel
-    Cursor = crNone
-    Left = 100
-    Height = 28
-    Top = 63
-    Width = 200
+    Cursor = crHandPoint
+    Left = 80
+    Height = 22
+    Top = 50
+    Width = 160
     Alignment = taCenter
     AutoSize = False
     Caption = 'LabelCompany'
     Font.CharSet = ANSI_CHARSET
-    Font.Color = clBlack
-    Font.Height = -20
+    Font.Color = clBlue
+    Font.Height = -16
     Font.Name = 'Segoe UI'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
@@ -1032,15 +1030,15 @@ object FAbout: TFAbout
     OnClick = LabelCompanyClick
   end
   object Memo1: TMemo
-    Left = 9
-    Height = 153
-    Top = 136
-    Width = 379
+    Left = 7
+    Height = 122
+    Top = 109
+    Width = 303
     Alignment = taCenter
     BorderStyle = bsNone
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
-    Font.Height = -15
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
@@ -1052,18 +1050,19 @@ object FAbout: TFAbout
     )
     ParentColor = True
     ParentFont = False
+    ReadOnly = True
     ScrollBars = ssAutoVertical
     TabOrder = 0
   end
   object Label1: TLabel
-    Left = 25
-    Height = 25
-    Top = 105
-    Width = 154
+    Left = 20
+    Height = 17
+    Top = 84
+    Width = 126
     Caption = 'Other Contributors:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
-    Font.Height = -18
+    Font.Height = -14
     Font.Name = 'Segoe UI'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
